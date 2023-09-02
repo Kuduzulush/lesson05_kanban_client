@@ -1,23 +1,48 @@
-import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
+import { useEffect, useState } from 'react';
 
 function App() {
+
+  const [tasks, setTasks] = useState([])
+
+  const getTasks = () => {
+    axios.get('http://localhost:3000/tasks')
+      .then((res) =>
+        setTasks(res.data)
+      )
+      .catch((error) =>
+        console.log(error)
+        )
+  }
+
+  // const getExampleFromServer = () => {
+  //   axios.post('http://localhost:3000/tasks', {
+  //     name: 'Learn Express JS',
+  //     description: 'Very iportant',
+  //     status: 'Todo'
+  //   })
+  //     .then(function (response) {
+  //       // handle success
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       // handle error
+  //       console.log(error);
+  //     })
+  //     .finally(function () {
+  //       // always executed
+  //       console.log('Get request Success')
+  //     });
+  // }
+
+  useEffect(() => {
+    getTasks()
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Kanban Board</h1>
     </div>
   );
 }
