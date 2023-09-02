@@ -23,7 +23,8 @@ function App() {
     axios.post('http://localhost:3000/tasks', {
       name: 'Try JS',
       description: 'Very iportant',
-      status: 'To do'
+      priority: 2,
+      status: 'In progress'
     })
       .then(function (response) {
         // handle success
@@ -41,7 +42,7 @@ function App() {
 
   useEffect(() => {
     getTasks();
-    getExampleFromServer();
+    //getExampleFromServer();
   }, [])
 
   return (
@@ -49,11 +50,12 @@ function App() {
       <h1>Kanban Board</h1>
       <div className="container text-center">
         <div className="row align-items-start">
-          {statuses.map((status) => {
-            <Column staus={status}
-            tasks={tasks}
+          {statuses.map((status) =>
+            <Column status={status}
+              tasks={tasks}
+              key={(Math.random() + Date.now())}
             />
-          })}
+          )}
 
         </div>
       </div>
