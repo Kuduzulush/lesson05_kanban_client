@@ -10,12 +10,22 @@ function App() {
   const [statuses, setStatuses] = useState([]);
   const [priorities, setPriorities] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 
+  const changeTaskStatus = (task, direction) => {
+    const newStatusesStringArray = statuses.map((status) => status.status);
+    const currentStatusIndex = newStatusesStringArray.indexOf(task.status);
+    const newStatusIndex = currentStatusIndex + (direction === 'right' ? + 1 : - 1);
+    const newStatus = newStatusesStringArray[newStatusIndex];
+    axios.patch(`http://localhost:3000/tasks/${task._id}`, {status: newStatus})
+      .then(res => getTasks())
+      .catch(error => alert('Failed'))
+  }
+
   const getTasks = () => {
     axios.get('http://localhost:3000/tasks')
-      .then((res) =>
+      .then(res =>
         setTasks(res.data)
       )
-      .catch((error) =>
+      .catch(error =>
         console.log(error)
       )
   }
@@ -30,6 +40,12 @@ function App() {
       )
   }
 
+  const deleteTask = (id) => {
+    axios.delete(`http://localhost:3000/tasks/${id}`)
+      .then(res => getTasks())
+      .catch(error => alert('Can not delete task'))
+  }
+
   const getStatuses = () => {
     axios.get('http://localhost:3000/statuses')
       .then((res) =>
@@ -37,6 +53,17 @@ function App() {
       )
       .catch((error) =>
         console.log(error)
+      )
+  }
+
+  const changeStatus = (updatedStatus, id) => {
+    console.log(updatedStatus);
+    axios.patch(`http://localhost:3000/statuses/${id}`, updatedStatus)
+      .then((res) =>
+        getStatuses()
+      )
+      .catch((error) =>
+        console.log('Failed')
       )
   }
 
@@ -54,26 +81,44 @@ function App() {
   }
 
 
-  // const getExampleFromServer = () => {
-  //   axios.post('http://localhost:3000/statuses', {
-  //     name: 'Try JS',
-  //     description: 'Very iportant',
-  //     priority: 2,
-  //     status: 'Review'
-  //   })
-  //     .then(function (response) {
-  //       // handle success
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       // handle error
-  //       console.log(error);
-  //     })
-  //     .finally(function () {
-  //       // always executed
-  //       console.log('Get request Success')
-  //     });
-  // }
+  const postTasksFromServer = () => {
+    axios.post('http://localhost:3000/tasks', {
+      name: 'Try JS',
+      description: 'Very iportant',
+      priority: 2,
+      status: 'Progress'
+    })
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch((error) => {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+        console.log('Get request Success')
+      });
+  }
+
+  const postStatusesFromServer = () => {
+    axios.post('http://localhost:3000/statuses', {
+      name: 'Done'
+    })
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch((error) => {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+        console.log('Get request Success')
+      });
+  }
 
   useEffect(() => {
     getTasks();
@@ -81,19 +126,25 @@ function App() {
     //getExampleFromServer();
   }, [])
 
+  console.log(statuses)
+
   return (
     <div className="App">
       <h1>Kanban Board</h1>
+      <button onClick={postTasksFromServer}>Change Task</button>
+      <button onClick={postStatusesFromServer}>Change Status</button>
       {/* <button onClick={getExampleFromServer}>Create Status</button>&nbsp;
       <button onClick={getStatuses}>Get Statuses</button> */}
       <div className="container text-center">
         <div className="row align-items-start">
-          {statuses.map((status) =>
+          {statuses.map((status) => 
             <Column status={status}
               tasks={tasks}
               key={status._id}
               changeTask={changeTask}
               priorities={priorities}
+              changeTaskStatus={changeTaskStatus}
+              deleteTask={deleteTask}
             />
           )}
 

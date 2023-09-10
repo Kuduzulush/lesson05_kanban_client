@@ -1,6 +1,7 @@
 import React from 'react';
+import DeleteModal from './seleteModal';
 
-export default function Card({ task, changeTask, priorities }) {
+export default function Card({ deleteTask, task, changeTask, priorities, changeTaskStatus }) {
     return (
         <div className="card">
             <h5 className="card-header">{task.name}</h5>
@@ -24,7 +25,34 @@ export default function Card({ task, changeTask, priorities }) {
                     </button>
                 </p>
 
-                <a href="../" className="btn btn-primary">Go somewhere</a>
+                
+                    <button
+                        type="button"
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={() => changeTaskStatus(task, 'left')}
+                    //disabled={}
+                    >
+                        &larr;
+                    </button>
+                    {' '}
+                    <button
+                        type="button"
+                        className="btn btn-outline-primary btn-sm"
+                    >Update
+                    </button>
+                    <DeleteModal
+                        task={task}
+                        deleteTask={deleteTask}
+                    />
+                    {' '}
+                    <button
+                        type="button"
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={() => changeTaskStatus(task, 'right')}
+                    //disabled={}
+                    >
+                        &rarr;
+                    </button>
                 
             </div>
         </div>
