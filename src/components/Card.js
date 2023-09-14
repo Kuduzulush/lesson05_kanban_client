@@ -1,7 +1,9 @@
 import React from 'react';
-import DeleteModal from './seleteModal';
+import DeleteModal from './DeleteModal';
+import ChangeModal from "./ChangeModal"
 
 export default function Card({ deleteTask, task, changeTask, priorities, changeTaskStatus }) {
+    //console.log(task);
     return (
         <div className="card">
             <h5 className="card-header">{task.name}</h5>
@@ -25,35 +27,31 @@ export default function Card({ deleteTask, task, changeTask, priorities, changeT
                     </button>
                 </p>
 
-                
-                    <button
-                        type="button"
-                        className="btn btn-outline-primary btn-sm"
-                        onClick={() => changeTaskStatus(task, 'left')}
-                    //disabled={}
-                    >
-                        &larr;
-                    </button>
-                    {' '}
-                    <button
-                        type="button"
-                        className="btn btn-outline-primary btn-sm"
-                    >Update
-                    </button>
-                    <DeleteModal
-                        task={task}
-                        deleteTask={deleteTask}
-                    />
-                    {' '}
-                    <button
-                        type="button"
-                        className="btn btn-outline-primary btn-sm"
-                        onClick={() => changeTaskStatus(task, 'right')}
-                    //disabled={}
-                    >
-                        &rarr;
-                    </button>
-                
+
+                <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => changeTaskStatus(task, 'left')}
+                    //disabled={statuses[0].name === task.status}
+                >
+                    &larr;
+                </button>
+                {' '}
+                <ChangeModal />{' '}
+                <DeleteModal
+                    task={task}
+                    deleteTask={deleteTask}
+                />
+                {' '}
+                <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => changeTaskStatus(task, 'right')}
+                //disabled={}
+                >
+                    &rarr;
+                </button>
+
             </div>
         </div>
     )

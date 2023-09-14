@@ -10,9 +10,9 @@ function DeleteModal({ task, deleteTask }) {
   }
 
   return (
-    <div>
+    <>
       <Button color="danger" onClick={toggle}>
-        Delete task
+        Delete
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Delete task</ModalHeader>
@@ -28,7 +28,7 @@ function DeleteModal({ task, deleteTask }) {
           </Button>
         </ModalFooter>
       </Modal>
-    </div>
+    </>
   );
 }
 
