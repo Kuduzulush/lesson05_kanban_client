@@ -1,8 +1,8 @@
 import React from 'react';
 import DeleteModal from './DeleteModal';
-import ChangeModal from "./ChangeModal"
+import UpdateModal from './UpdateModal';
 
-export default function Card({ deleteTask, task, changeTask, priorities, changeTaskStatus }) {
+export default function Card({ deleteTask, task, changeTask, priorities, changeTaskStatus, statuses }) {
     //console.log(task);
     return (
         <div className="card">
@@ -37,7 +37,12 @@ export default function Card({ deleteTask, task, changeTask, priorities, changeT
                     &larr;
                 </button>
                 {' '}
-                <ChangeModal />{' '}
+                <UpdateModal 
+                statuses={statuses}
+                priorities={priorities}
+                task={task}
+                changeTask={changeTask}
+                />{' '}
                 <DeleteModal
                     task={task}
                     deleteTask={deleteTask}

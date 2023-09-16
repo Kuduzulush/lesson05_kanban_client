@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from "./Card";
 
-export default function Column({ deleteTask, changeTaskStatus, status, tasks, changeTask, priorities }) {
+export default function Column({ deleteTask, changeTaskStatus, status, tasks, changeTask, priorities,statuses }) {
     return (
         <div className='col'>
             <h2>{status.name}</h2>
@@ -13,6 +13,7 @@ export default function Column({ deleteTask, changeTaskStatus, status, tasks, ch
                     priorities={priorities}
                     changeTaskStatus={changeTaskStatus}
                     deleteTask={deleteTask}
+                    statuses={statuses}
                 />
             )}
         </div>

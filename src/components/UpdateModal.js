@@ -1,39 +1,36 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Input, InputGroup, InputGroupText } from 'reactstrap';
 
-function CreateModal({ statuses, priorities, createTask }) {
+function UpdateModal({ statuses, priorities, task, changeTask }) {
     const [modal, setModal] = useState(false);
-    const initialState ={
-        name: '',
-        description: '',
-        status: statuses[0]?.name,
-        priority: priorities[0]
+    const toggle = () => setModal(!modal);
+    const [updatedTask, setUpdatedTask] = useState({ ...task });
+
+    const saveButtonHandler = () => {
+        changeTask(updatedTask, task._id);
+        toggle();
     }
-    const [newTask, setNewTask] = useState(initialState)
 
-    const okButtonHandler = () => {
-        toggle()
-        createTask(newTask)
-        setNewTask(initialState)
-    };
-
-    const toggle = ()  => setModal(!modal)
+    const cancelButtonHandler = () => {
+        setUpdatedTask({...task})
+        toggle();
+    }
 
     return (
         <>
             <Button color="primary" onClick={toggle}>
-                Create Task
+                Update Task
             </Button>
             <Modal isOpen={modal} toggle={toggle}>
-                <ModalHeader toggle={toggle}>Create task</ModalHeader>
+                <ModalHeader toggle={toggle}>Update task</ModalHeader>
                 <ModalBody>
                     <InputGroup>
                         <InputGroupText>
                             Name
                         </InputGroupText>
-                        <Input value={newTask.name}
-                            onChange={event => setNewTask({ ...newTask, name: event.target.value }
-                            )}
+                        <Input
+                            value={updatedTask.name}
+                            onChange={event => setUpdatedTask({ ...updatedTask, name: event.target.value })}
                         />
                     </InputGroup>
                     <br />
@@ -42,21 +39,21 @@ function CreateModal({ statuses, priorities, createTask }) {
                         <InputGroupText>
                             Description
                         </InputGroupText>
-                        <Input value={newTask.description}
-                            onChange={(event => setNewTask({ ...newTask, description: event.target.value }))}
+                        <Input
+                            value={updatedTask.description}
+                            onChange={event => setUpdatedTask({ ...updatedTask, description: event.target.value })}
                         />
                     </InputGroup>
                     <br />
+
 
                     <Label for="unmountOnClose">Status</Label>{' '}
                     <Input
                         type="select"
                         name="unmountOnClose"
                         id="unmountOnClose"
-                        value={newTask.status}
-                        onChange={event =>
-                            setNewTask({ ...newTask, status: event.target.value })
-                        }
+                        value={updatedTask.status}
+                        onChange={event => setUpdatedTask({ ...updatedTask, status: event.target.value })}
                     >
                         {statuses.map(el =>
                             <option
@@ -71,11 +68,9 @@ function CreateModal({ statuses, priorities, createTask }) {
                     <Label for="unmountOnClose">Priority</Label>{' '}
                     <Input
                         type="select"
-                        name="unmountOnClose"
+                        value={updatedTask.priority}
                         id="unmountOnClose"
-                        value={newTask.priority}
-                        onChange={event =>
-                            setNewTask({ ...newTask, priority: event.target.value })}
+                        onChange={event => setUpdatedTask({ ...updatedTask, priority: event.target.value })}
                     >
                         {priorities.map((el, i) =>
                             <option
@@ -85,15 +80,15 @@ function CreateModal({ statuses, priorities, createTask }) {
                             </option>
                         )}
                     </Input>
-
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary" onClick={okButtonHandler}
-                        disabled={!newTask.name || !newTask.description}
+                    <Button
+                        color="primary"
+                        onClick={saveButtonHandler}
                     >
-                        Ok
+                        Save
                     </Button>{' '}
-                    <Button color="secondary" onClick={toggle}>
+                    <Button color="secondary" onClick={cancelButtonHandler}>
                         Cancel
                     </Button>
                 </ModalFooter>
@@ -102,4 +97,4 @@ function CreateModal({ statuses, priorities, createTask }) {
     );
 }
 
-export default CreateModal;
+export default UpdateModal;

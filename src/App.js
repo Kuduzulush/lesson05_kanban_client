@@ -4,12 +4,19 @@ import { useEffect, useState } from 'react';
 import "bootstrap/dist/css/bootstrap.css"
 import Column from './components/Column'
 import CreateModal from './components/CreateModal';
+import Loader from './utils/Loader';
+import useFetching from './hooks/useFetching';
+import { getStatuses } from './API/statusesServices';
 
 function App() {
 
   const [tasks, setTasks] = useState([]);
   const [statuses, setStatuses] = useState([]);
-  const [priorities, setPriorities] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+  const [priorities, setPriorities] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const [fetchStatuses, isStatusesLoading, statusesError] = useFetching(async () => {
+    const response = await getStatuses();
+    setStatuses(response);
+  })
 
   const changeTaskStatus = (task, direction) => {
     const newStatusesStringArray = statuses.map((status) => status.name);
@@ -54,16 +61,6 @@ function App() {
       .catch(error => alert('Can not delete task'))
   }
 
-  const getStatuses = () => {
-    axios.get('http://localhost:3000/statuses')
-      .then((res) =>
-        setStatuses(res.data)
-      )
-      .catch((error) =>
-        console.log(error)
-      )
-  }
-
   const changeStatus = (updatedStatus, id) => {
     console.log(updatedStatus);
     axios.patch(`http://localhost:3000/statuses/${id}`, updatedStatus)
@@ -88,50 +85,9 @@ function App() {
       })
   }
 
-
-  const postTasksFromServer = () => {
-    axios.post('http://localhost:3000/tasks', {
-      name: 'Try JS',
-      description: 'Very iportant',
-      priority: 2,
-      status: 'Progress'
-    })
-      .then(function (response) {
-        // handle success
-        console.log(response);
-      })
-      .catch((error) => {
-        // handle error
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
-        console.log('Get request Success')
-      });
-  }
-
-  const postStatusesFromServer = () => {
-    axios.post('http://localhost:3000/statuses', {
-      name: 'Done'
-    })
-      .then(function (response) {
-        // handle success
-        console.log(response);
-      })
-      .catch((error) => {
-        // handle error
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
-        console.log('Get request Success')
-      });
-  }
-
   useEffect(() => {
     getTasks();
-    getStatuses();
-    //getExampleFromServer();
+    fetchStatuses();
   }, [])
 
   //console.log(tasks)
@@ -139,27 +95,29 @@ function App() {
   return (
     <div className="App">
       <h1>Kanban Board</h1>
-      {/* <button onClick={postTasksFromServer}>Change Task</button>
-      <button onClick={postStatusesFromServer}>Change Status</button> */}
-      <CreateModal 
-      createTask={createTask}
-      statuses={statuses}
-      priorities={priorities}
+      <CreateModal
+        createTask={createTask}
+        statuses={statuses}
+        priorities={priorities}
       />&nbsp;
-      {/* <button onClick={getStatuses}>Get Statuses</button> */}
       <div className="container text-center">
         <div className="row align-items-start">
-          {statuses.map((status) =>
-            <Column status={status}
-              tasks={tasks}
-              key={status._id}
-              createTask={createTask}
-              changeTask={changeTask}
-              priorities={priorities}
-              changeTaskStatus={changeTaskStatus}
-              deleteTask={deleteTask}
-            />
-          )}
+          {isStatusesLoading ?
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '70vh' }}><Loader /></div>
+            :
+            statuses.map((status) =>
+              <Column status={status}
+                tasks={tasks}
+                key={status._id}
+                createTask={createTask}
+                changeTask={changeTask}
+                priorities={priorities}
+                changeTaskStatus={changeTaskStatus}
+                deleteTask={deleteTask}
+                statuses={statuses}
+              />
+            )
+          }
 
         </div>
       </div>
